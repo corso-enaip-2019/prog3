@@ -10,34 +10,42 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            int lato1 = AskandCheckNumber("inserisci primo lato");
-            int lato2 = AskandCheckNumber("inserisci secondo lato");
-            int lato3 = AskandCheckNumber("inserisci terzo lato");
+            int[] lato = new int[3];
+            for (int i = 0; i < 3; i++)
+            {
+                lato[i] = AskandCheckNumber(string.Concat("inserisci lato", i + 1));
+            }
 
+           
 
-            bool sumOK = lato1 + lato2 > lato3 && lato1 + lato3 > lato2 && lato2 + lato3 > lato1;
-            bool difOk = lato1 > Math.Abs(lato2 - lato3) && lato2 > Math.Abs(lato1 - lato3) && lato3 > Math.Abs(lato2 - lato1);
-
-
-
-            if ( sumOK && difOk )
+            if (IsTriangle(lato[0],lato[1],lato[2]))
             {
                 Console.WriteLine("è un triangolo");
             }
             else
             {
                 Console.WriteLine("non è un triangolo");
+
+                do
+                {
+                    int m = Math.Max(Math.Max(lato[0], lato[1]), lato[2]);
+
+                    int index = Array.IndexOf(lato, m);
+                    lato[index] = lato[index]-1;
+                }
+                while (!IsTriangle(lato[0], lato[1], lato[2]));
+                Console.WriteLine($"questi valori invece costituiscono un triangolo {lato[0]}, {lato[1]}, {lato[2]}");
             }
 
             Console.ReadLine();
         }
         /// <summary>
-        /// Nostra all'utente il messaggio e prova
+        /// Mostra all'utente il messaggio e prova
         /// convertire il valore inserito in input in un intero
         /// </summary>
         /// <param name="message">Messaggio mostrato all'utente</param>
         /// <returns></returns>
-        static int AskandCheckNumber (string message)
+        static int AskandCheckNumber(string message)
         {
             System.Diagnostics.Debug.WriteLine(string.Concat("Message:", message));
             Console.WriteLine(message);
@@ -53,6 +61,21 @@ namespace ConsoleApp1
             System.Diagnostics.Debug.WriteLine($"{message}:{input}");
 
             return convertedValue;
+
+        }
+        /// <summary>
+        /// Algoritmo per verificare se è un triangolo
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <returns>true se a, b, c formano triangolo, false in caso contrario </returns>
+        static bool IsTriangle (int a , int b, int c)
+        {
+            bool sumOK = a + b > c && a + c > b && b + c > a;
+            bool difOk = a > Math.Abs(b - c) && b > Math.Abs(a - c) && c > Math.Abs(b - a);
+
+            return sumOK && difOk;
         }
     }
 }
